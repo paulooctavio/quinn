@@ -1,0 +1,24 @@
+name: Auto-assign issue on comment
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    if: (!github.event.issue.pull_request) && github.event.comment.body == 'take'
+    concurrency:
+      # Only run one a time per user
+      group: ${{ github.actor }}-issue-assign
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v3
+
+    - name: Assign issue to commenter
+      uses: peter-evans/assign-issue@v2
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        assignees: ${{ github.event.comment.user.login }}
