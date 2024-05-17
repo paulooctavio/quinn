@@ -1,4 +1,5 @@
 name: Auto-assign issue on comment
+
 on:
   issue_comment:
     types: [created]
@@ -14,9 +15,6 @@ jobs:
       # Only run one a time per user
       group: ${{ github.actor }}-issue-assign
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v3
-
     - name: Assign issue to commenter
       uses: peter-evans/assign-issue@v2
       with:
